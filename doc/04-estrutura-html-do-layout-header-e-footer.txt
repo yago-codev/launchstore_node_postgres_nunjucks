@@ -1,0 +1,153 @@
+
+01) Inserindo o título na base do nosso layout:
+
+    Onde?
+    src/app/views/layout.njk
+
+    <!DOCTYPE html>
+    <html lang="pt-BR">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      {% block head %} <==
+        <title>Lauchstore</title> <==
+      {% endblock %} <==
+
+      <link rel="stylesheet" href="/styles.css">
+    </head>
+    <body>
+      {% block content %}{% endblock %}
+      <script src="/scripts.js"></script>
+    </body>
+    </html>
+
+02) Usando fontes externas do Material Icons via CDN:
+
+    Site do Material Icons:
+    https://material.io/develop/web/docs/getting-started/
+
+    <!DOCTYPE html>
+    <html lang="pt-BR">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      {% block head %}
+        <title>Lauchstore</title>
+      {% endblock %}
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"> <==
+      <link rel="stylesheet" href="/styles.css">
+    </head>
+    <body>
+      {% block content %}{% endblock %}
+      <script src="/scripts.js"></script>
+    </body>
+    </html>
+
+03) Fatiando/Separando o nosso HTML em partes :
+
+    Como?
+    Através do Nunjucks poderemos reutilizar partes/trechos de HTML 
+    dentro dos nossos arquivos njk. 
+
+    Para fazermos isso, 
+    criaremos uma pasta chamada 
+    parts
+
+    Onde?
+    src/app/views/parts
+
+
+04) Adicionando o header e o footer com parts a serem reutilizadas :
+
+    Onde?
+    src/app/views/parts/header.nkj
+    src/app/vies/parts/footer.njk
+
+05) Criando a estrutura inicial do footer:
+
+    Iremos extrair a chamada pro script que está sendo feita no final do layout.njk:
+
+    <footer>© Copyright Launchstore</footer>
+    <script src="/scripts.js"></script> <==
+
+06) Criando a estrutura do header: 
+
+    <header>
+      <div class="container">
+        <a href="/">
+          <div class="logo">
+            <h1>Launchstore</h1>
+            <h2>COMPRA E VENDA</h2>
+          </div>
+        </a>
+
+        <form class="search" method="GET" action="/products/search">
+          <input 
+            type="text"
+            name="filter"
+            placeholder="Buscar por Produtos"
+            {% if searc.term %}  
+              value={{ search.term }}
+            {% endif %}
+          />
+        </form>
+
+        <nav class="primary">
+          <ul>
+            <li>
+              <a href="/ads/create">
+                <i class="material-icons">add</i>
+                Novo Anúncio
+              </a>
+            </li>
+
+            <li>
+              <a href="/accounts">
+                <i class="material-icons">account_circle</i>
+                Minha Conta
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+07) Incluindo as parts dentro dos arquivos njk :
+
+    <!DOCTYPE html>
+    <html lang="pt-BR">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      {% block head %}
+        <title>Lauchstore</title>
+      {% endblock %}
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+      <link rel="stylesheet" href="/styles.css">
+    </head>
+    <body>
+      {% include "parts/header.njk" %}
+
+      {% block content %}{% endblock %}
+
+      {% include "parts/footer.njk" %}
+      
+      <script src="/scripts.js"></script>
+    </body>
+    </html>
+
+08) Renderizando o layout na rota principal:
+
+    const express = require('express');
+    const routes = express.Router();
+
+    routes.get('/', (req, res) => {
+      return res.render('layout.njk'); <==
+    });
+
+    module.exports = routes;
+
+09) 

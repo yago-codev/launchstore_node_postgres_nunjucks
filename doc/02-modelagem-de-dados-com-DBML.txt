@@ -1,0 +1,46 @@
+01) Iremos criar a modelagem de dados do absoluto 0, utilizando uma ferramenta chamada dbdiagram.
+
+    site: 
+    dbdiagram.io/home
+
+02) Criando diagramas no dbdiagram:
+
+    Como funciona?
+    Os diagramas são compostos conforme 
+    vamos escrevendo qual será sua estrutura, 
+    por exemplo:
+
+    Table users as U {
+      id int [pk, increment],
+    }
+
+    Automaticamente um diagrama de uma tabela chamada users será montada, 
+    e dentro dela teremos o id.
+
+03) Agora que já aprendemos como é a sintaxe de composição da modelagem e da criação do diagrama, 
+    vamos partir direto pra estruturação do nosso banco de dados:
+
+    Table products {
+      id int [pk, increment]
+      category_id int [unique] // relacionamento com a tabela de categoria
+      user_id int [unique] // relacionamento com a tabela de usuários
+      name text
+      description text
+      old_price int 
+      price int
+      quantity int
+      status int
+      created_at timestamp [default: `now()`] // estamos determinando através do default que queremos gerar isso automaticamente
+      updated_at timestamp [default: `now()`]
+    }
+
+    Table categorires {
+      id int [pk, increment]
+      name text
+    }
+
+    Table files {
+      id int [pk, increment]
+      name text
+      path text
+    }

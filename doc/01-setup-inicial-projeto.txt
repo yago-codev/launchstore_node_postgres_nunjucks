@@ -1,0 +1,10 @@
+01) Estrutura de pastas:
+
+    server.js (arquivo de entrada da aplicação)
+    routes.js (arquivo contendo as rotas da aplicação)
+    public  (arquivos estáticos)
+    src/app/controllers (regra de negócios)
+    src/app/lib/utils.js  (funções utilitárias)
+    src/app/views/layout.njk  (base html)
+    src/config/db.js  (arquivo de conexão com o postgres)
+    src/models  (modelo da tabela)

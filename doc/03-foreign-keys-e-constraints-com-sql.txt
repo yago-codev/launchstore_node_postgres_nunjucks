@@ -1,0 +1,138 @@
+01) Criando relacionamentos utilizando o dbdiagram:
+
+    Ref: products.category_id > categories.id // MUITOS produtos pertencem a UMA categoria (relação: um pra muitos/muitos pra um)
+    Ref: files.product_id > products.id // muitos arquivos pertencem a um produto (relação muitos pra um/ um pra muitos)
+
+    OBS: Esses relacionamentos que foram criados são chamados de CONSTRAINTS(obrigações) !
+
+02) Exportando o diagrama do DBML para um modelo de PostgreSQL:
+
+
+    Como?
+    No botão export!
+
+    Vamos chamar esse arquivo de 
+    database
+
+03) Abrindo o arquivo dentro do VSCode:
+
+    Ao abrirmos o arquivo sql que foi gerado a partir do nosso diagrama, 
+    teremos a seguinte estrutrura:
+
+    CREATE TABLE "products" (
+      "id" SERIAL PRIMARY KEY,
+      "category_id" int UNIQUE,
+      "user_id" int UNIQUE,
+      "name" text,
+      "description" text,
+      "old_price" int,
+      "price" int,
+      "quantity" int,
+      "status" int,
+      "created_at" timestamp DEFAULT (now()),
+      "updated_at" timestamp DEFAULT (now())
+    );
+
+    CREATE TABLE "categories" (
+      "id" SERIAL PRIMARY KEY,
+      "name" text
+    );
+
+    CREATE TABLE "files" (
+      "id" SERIAL PRIMARY KEY,
+      "name" text,
+      "path" text,
+      "product_id" int UNIQUE
+    );
+
+    ALTER TABLE "products" ADD FOREIGN KEY ("category_id") REFERENCES "categories" ("id"); <==
+
+    ALTER TABLE "files" ADD FOREIGN KEY ("product_id") REFERENCES "products" ("id"); <==
+
+    OBS: Nas duas linhas acima nós temos o comando SQL responsável por 
+    realizar o relacionamento que criamos no diagrama. 
+    O termo FOREIGN KEY serve para adicionarmos a chave extrangeira,
+    que será o id da tabela com a qual queremos criar o relacionamento. 
+    Além disso, ou seja, além de adicionarmos a chave extrangeira apontando 
+    para o id da tabela que queremos relacionar, 
+    devemos referenciar explicitamente o nome dessa tabela, assim como o id. 
+
+04) Criando um novo Database através do Postbird
+
+    Nome do database:
+    launchstore
+
+05) Criando as tabelas:
+
+    Dentro do Postbird iremos apenas colar a query que 
+    foi gerada através do diagrama que criamos.
+
+06) Criando um produto através do Postbird:
+
+    category_id 1
+    user_id 1
+    name computador
+    description qualquer 
+    old_price 999
+    price 999
+    quantity 1 
+    status 1
+    created_at (criado automaticamente, não precisa preencher)
+    updated_at (criado automaticamente, não precisa preencher)
+
+    Quando apertarmos a tecla enter para inserir esse produto na tabela, 
+    receberemos um erro, pois estamos violando uma das regras da CONSTRAINT que foi especificada, 
+    que é a CONSTRAINT da chave estrangeira. 
+    Ou seja, como criamos o produto informando que o category_id é 1, 
+    precisaremos obrigatoriamente ter um registro na tabela de categorias com o id igual a 1,
+    portanto teremos que criar-lo. 
+
+07) Criando uma nova categoria através do Postbird:
+
+    id (é gerado automaticamente, não precisa preencher)
+    name Eletronicos
+
+    Criando mais um:
+
+    id (é gerado automaticamente, não precisa preencher)
+    name Comida
+
+08) Tornando a cadastrar o produto.
+
+    Assim que pressionarmos o enter, 
+    conseguiremos inserir o produto corretamente, 
+    já que criamos os registros necessários na tabela de 
+    categorias. 
+    Tanto é que esse relacionamento fica evidenciado no próprio Postbird, 
+    através de um ícone clicável que fica dentro do valor do id com o qual
+    estamos estabelecendo a CONSTRAINT.
+
+    Ou seja, 
+    dentro dos valores da coluna category_id teremos 
+    as informações precisas de qual registro de qual tabela está 
+    relacionado ao produto que criamos. 
+    O Postbird oferece ainda um botão chamado 
+    Apply Filters, 
+    e quando clicamos nele, somos levados diretamente aos detalhes do registro 
+    com o qual estamos criando o relacionamento.
+
+09) Utilizando o Postbird para definir as colunas que podem ou não ter valores nulos:
+
+    Porque?
+    Porque na hora de criar o diagrama não fizemos isso :P
+
+    Além disso, 
+    dentro da tabela Products, 
+    iremos setar um valor default para a coluna quantity,
+    que será igual a 0.
+    Isso porque deixaremos que esse valor seja nulo, 
+    ou seja, se não for preechido, 
+    automaticamente setaremos o valor 0.
+
+    Na coluna status, 
+    setaremos um valor default igual a 1, que significa que o produto estará ativo, 
+    também deixaremos que esse valor seja nulo. 
+
+    Pronto, 
+    tendo finalizado os ajustes dos campos que podem ser nulos ou não, 
+    teremos concluído a estrutura inicial das nossas tabelas. 
