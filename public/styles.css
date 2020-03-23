@@ -31,6 +31,31 @@ body {
   margin: 0 auto;
 }
 
+.button {
+  width: 100%;
+  background: -webkit-linear-gradient(#5880FF, #809CFF);
+  display: block;
+  font-size: 16px;
+  color: white;
+  margin: 16px 0;
+  padding: 12px 24px;
+  border-radius: 25px;
+  box-shadow:  7px 7px 10px #bdc5d6, 
+               -7px -7px 10px #ffffff;
+  transition: box-shadow 0.3s;
+  align-self: end; /* vai alinhar o btn na extremidade mais baixa quando estiver dentro de um elemento com grid */
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.button:active {
+  box-shadow: inset 7px 7px 10px #4b6dd9, 
+            inset -7px -7px 10px #6593ff;
+}
+
 header, footer {
   width: 100%;
   background-color: var(--primary-color);
@@ -39,8 +64,7 @@ header, footer {
 }
 
 header {
-  box-shadow:  20px 20px 60px #bdc5d6, 
-              -20px -20px 60px #ffffff;
+  box-shadow:  5px 5px 10px #bdc5d6;
 }
 
 header div.container {
@@ -72,7 +96,7 @@ header div.container a {
   font-size: 16px;
   background: var(--primary-color);
   box-shadow: inset 3px 3px 10px #bdc5d6, 
-  inset -3px -3px 10px #ffffff;
+              inset -3px -3px 10px #ffffff;
   color: var(--font-primary);
 }
 
@@ -104,7 +128,7 @@ nav.primary ul li a {
   margin-right: 8px;
   color: var(--font-secondary);
   box-shadow:  5px 5px 10px #bdc5d6, 
-  -5px -5px 10px #ffffff;
+               -5px -5px 10px #ffffff;
   transition: color 0.3s;
 }
 
@@ -129,4 +153,102 @@ nav.primary ul li a:active i {
 
 nav.primary ul li a i {
   margin-right: 5px;
+}
+
+/* Form de Produtos */
+section.form {
+  width: 90%;
+  max-width: 700px;
+  background: var(--primary-color);
+  padding: 32px 24px;
+  margin: 32px auto;
+  border-radius: 25px;
+  box-shadow:  5px 5px 10px #bdc5d6, 
+               -5px -5px 10px #ffffff;
+}
+
+section.form .header h3 {
+  font-size: 14px;
+  line-height: 24px;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+  background: -webkit-linear-gradient(#5880FF, #809CFF);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 32px;
+  font-weight: 900;
+}
+
+section.form .item {
+  margin-bottom: 32px;
+}
+
+section.form .item > div:nth-child(1) {
+  color: var(--font-primary);
+  text-transform: uppercase;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+section.form .item input::placeholder {
+  color: var(--font-secondary);
+}
+
+section.form .item input,
+section.form .item textarea,
+section.form .item select {
+  width: 100%;
+  padding: 12px 24px;
+  font-size: 16px;
+  background-color: var(--primary-color);
+  box-shadow: inset 3px 3px 10px #bdc5d6, 
+              inset -3px -3px 10px #ffffff;
+  border-radius: 25px;
+  color: var(--font-primary);
+}
+
+section.form .item input[type="text"] {
+
+}
+
+section.form .item input[type="number"] {
+
+}
+
+section.form .item textarea {
+
+}
+
+section.form .item select,
+section.form .item input {
+
+}
+
+section.form .item select {
+  /*  removendo estilização default do select */
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+
+  /* trazer de volta o ícone */
+  background-image: url('./img/arrow_down.svg');
+  background-size: 20px;
+  background-repeat: no-repeat;
+  background-position: right 1.5em top 50%, 0 0;
+}
+
+section.form .item textarea {
+  min-height: 150px;
+}
+
+section.form .fields {
+  margin-bottom: 64px;
+}
+
+/* Footer */
+footer {
+  color: var(--font-secondary);
+  box-shadow:  5px 5px 10px #bdc5d6, 
+               -5px -5px 10px #ffffff;
 }
