@@ -1,0 +1,346 @@
+01) A seguir iremos conhecer o padrão async/await para trabalhar com assíncronismo:
+
+    Porque?
+    Porque apesar do padrão de Promise ter vindo para
+    resolver alguns problemas de callbacks aninhadas, 
+    continuamos tendo alguns problemas que decorrem da utilização das Promises. 
+    Para solucionar o problema das Promises, 
+    podemos trabalhar com outro padrão de assíncronismo, 
+    que é o async/await. 
+
+02) Criando lógica para persistir os produtos no banco de dados:
+
+    Quebraremos essa lógica em um passo a passo, 
+    facilitando o entendimento do que precisa ser feito para podermos 
+    pegar os dados digitados no formulário e carregarmos eles para o banco.
+
+    ...
+
+03) Pegando as chaves do objeto retornado no corpo da requisição:
+
+    Porque?
+    Porque dentro do 
+    req.body
+    iremos ter acesso a um objeto. 
+    Esse objeto contém os names de cada um dos campos presentes no form. 
+
+    Onde?
+    Na função post() do ProductController :
+
+    const Category = require('../models/Category');
+
+    module.exports = {
+        create(req, res) {
+            Category.all()
+                .then((results) => {
+                    const categories = results.rows; // vai retornar os registros da tabela de categorias como um array
+
+                    return res.render('products/create.njk', { categories });
+                }).catch((err) => {
+                    throw new Error(err);
+                });
+        },
+        post(req, res) {
+            const keys = Object.keys(req.body); <== <== <==
+        }
+    }
+
+04) Percorrendo as chaves do objeto retornado no req.body :
+
+    const Category = require('../models/Category');
+
+    module.exports = {
+      create(req, res) {
+        Category.all()
+          .then((results) => {
+            const categories = results.rows; // vai retornar os registros da tabela de categorias como um array
+
+            return res.render('products/create.njk', { categories });
+          }).catch((err) => {
+            throw new Error(err);
+          });
+      },
+      post(req, res) {
+        const keys = Object.keys(req.body);
+
+        for ( key of keys ) { <==
+
+        } <==
+      }
+    }
+
+05) Criando condicional para saber se algum campo do form está vazio:
+
+    const Category = require('../models/Category');
+
+    module.exports = {
+      create(req, res) {
+        Category.all()
+          .then((results) => {
+            const categories = results.rows; // vai retornar os registros da tabela de categorias como um array
+
+            return res.render('products/create.njk', { categories });
+          }).catch((err) => {
+            throw new Error(err);
+          });
+      },
+      post(req, res) {
+        const keys = Object.keys(req.body);
+
+        for ( key of keys ) {
+          if ( req.body[key] ) { <== <== <==
+            return res.send('Please, fill all fields'); <== <== <==
+          } <== <== <==
+        }
+      }
+    }
+
+06) Criando o model de produtos:
+
+    Onde?
+    src/app/models/Product.js
+
+07) Estrutura do model:
+
+    A seguir faremos um passo a passo para 
+    entendermos toda lógica necessária para 
+    persistirmos os dados na tabela de produtos. 
+
+08) Importando o arquivo de config do db dentro do model de Produtos:
+
+    const db = require('../../config/db'); <--
+
+09) Exportando o objeto contendo a função que será usada para 
+    criar a lógica de persistência/inclusão/criação:
+
+    A função que criaremos se chamará
+    create()
+
+    Dentro da função create() iremos ter a query 
+    de inclusão que irá inserir os registros do form de cadastro de produtos, 
+    dentro da tabela de produtos. 
+
+    Além disso, 
+    a função create() precisará receber um parâmetro,
+    que serão os dados capturados no req.body
+
+    const db = require('../../config/db');
+
+    module.exports = {
+      create(data) {
+        const query = `
+          INSERT INTO products (
+            category_id,
+            user_id,
+            name,
+            description,
+            old_price,
+            price,
+            quantity,
+            status
+          ) VALUES ( $1, $2, $3, $4, $5, $6, $7, $8 )
+          RETURNING id
+        `
+
+        const values = [
+          data.category_id,
+          1, // user_id inserido na mão porque a tabela de users ainda não foi criada
+          data.name,
+          data.description, 
+          data.old_price,
+          data.price,
+          data.quantity,
+          data.status
+        ]
+
+        return db.query(query, values);
+      } 
+    }
+  
+10) Refatorando a função post() do ProductController para utilizar async/await:
+
+    Sempre que realizarmos uma operação assíncrona utilizando async/await, 
+    a função assíncrona deverá conter a palavra 
+    async
+
+    O resultado da operacão deverá ser precedido pela palavra 
+    await
+
+    ...
+
+    const Category = require('../models/Category');
+
+    module.exports = {
+      create(req, res) {
+        Category.all()
+          .then((results) => {
+            const categories = results.rows; // vai retornar os registros da tabela de categorias como um array
+
+            return res.render('products/create.njk', { categories });
+          }).catch((err) => {
+            throw new Error(err);
+          });
+      },
+      async post(req, res) { <== <== <==
+        const keys = Object.keys(req.body);
+
+        for ( key of keys ) {
+          if ( req.body[key] ) {
+            return res.send('Please, fill all fields');
+          }
+        }
+
+        const results = await ... <== <==
+      }
+    }
+
+11) Para podermos retornar os resultados, importaremos o model de Products, 
+    pois dentro dele construímos a função post(data) que irá 
+    realizar a query de inserção no banco de dados e irá retornar o id do produto que foi criado. 
+
+    Passaremos como parâmetro pra função post() o req.body que 
+    foi capturado no form de cadastro de um novo produto.
+
+    const Category = require('../models/Category');
+    const Products = require('../models/Product'); <== <== <== <==
+
+    module.exports = {
+      create(req, res) {
+        Category.all()
+          .then((results) => {
+            const categories = results.rows; // vai retornar os registros da tabela de categorias como um array
+
+            return res.render('products/create.njk', { categories });
+          }).catch((err) => {
+            throw new Error(err);
+          });
+      },
+      async post(req, res) {
+        const keys = Object.keys(req.body);
+
+        for ( key of keys ) {
+          if ( req.body[key] ) {
+            return res.send('Please, fill all fields');
+          }
+        }
+
+        const results = await Product.create(req.body) <== <== <==
+      }
+    }
+
+12) O resultado retornado nessa query, 
+    ou seja,
+    o resultado da inserção dos dados do produto irá ser um array.
+    Esse array estará disponível dentro das rows,
+    ou seja, dentro das linhas da tabela que 
+    estarão dentro da constante results. 
+
+    Para acessarmos somente o índice exato que 
+    irá retornar o id do produto que foi inserido no banco, 
+    criaremos uma nova constante chamada product, 
+    onde acessaremos os results, pegando as rows na posição 0:
+
+    const Category = require('../models/Category');
+    const Products = require('../models/Product');
+
+    module.exports = {
+      create(req, res) {
+        Category.all()
+          .then((results) => {
+            const categories = results.rows; // vai retornar os registros da tabela de categorias como um array
+
+            return res.render('products/create.njk', { categories });
+          }).catch((err) => {
+            throw new Error(err);
+          });
+      },
+      async post(req, res) {
+        const keys = Object.keys(req.body);
+
+        for ( key of keys ) {
+          if ( req.body[key] ) {
+            return res.send('Please, fill all fields');
+          }
+        }
+
+        const results = await Product.create(req.body); <==
+        const product = results.rows[0]; <==
+      }
+    }
+
+13) Por fim iremos renderizar novamente a view de criação de produtos enquanto não temos a página de listagem de produtos:
+
+    OBS: Dentro da view iremos injetar o resultado da query de inserção, 
+    que será o id do produto inserido :
+
+    const Category = require('../models/Category');
+    const Products = require('../models/Product');
+
+    module.exports = {
+      create(req, res) {
+        Category.all()
+          .then((results) => {
+            const categories = results.rows; // vai retornar os registros da tabela de categorias como um array
+
+            return res.render('products/create.njk', { categories });
+          }).catch((err) => {
+            throw new Error(err);
+          });
+      },
+      async post(req, res) {
+        const keys = Object.keys(req.body);
+
+        for ( key of keys ) {
+          if ( req.body[key] ) {
+            return res.send('Please, fill all fields');
+          }
+        }
+
+        const results = await Product.create(req.body);
+        const product = results.rows[0];
+
+        return res.render('products/create.njk', { product }); <== <== <==
+      }
+    }
+
+14) E se quisermos injetar dentro da view os dados da tabela de categorias?
+
+    Podemos reaproveitar a variável results, 
+    somente fazendo com que ela seja uma let.
+    Desse modo podemos reaproveitar-la, 
+    fazendo o seguinte:
+
+    const Category = require('../models/Category');
+    const Products = require('../models/Product');
+
+    module.exports = {
+      create(req, res) {
+        Category.all()
+          .then((results) => {
+            const categories = results.rows; // vai retornar os registros da tabela de categorias como um array
+
+            return res.render('products/create.njk', { categories });
+          }).catch((err) => {
+            throw new Error(err);
+          });
+      },
+      async post(req, res) {
+        const keys = Object.keys(req.body);
+
+        for ( key of keys ) {
+          if ( req.body[key] ) {
+            return res.send('Please, fill all fields');
+          }
+        }
+
+        let results = await Product.create(req.body);
+        const product = results.rows[0];
+
+        results = await Category.all(); <== <== <==
+        const categories = results.rows; <== <== <==
+
+        return res.render('products/create.njk', { product, categories }); <== <== <==
+      }
+    }    
+
+15) Pronto, a inclusão de produto já pode ser testada!!
