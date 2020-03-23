@@ -208,23 +208,6 @@ section.form .item select {
   color: var(--font-primary);
 }
 
-section.form .item input[type="text"] {
-
-}
-
-section.form .item input[type="number"] {
-
-}
-
-section.form .item textarea {
-
-}
-
-section.form .item select,
-section.form .item input {
-
-}
-
 section.form .item select {
   /*  removendo estilização default do select */
   -moz-appearance: none;

@@ -1,0 +1,114 @@
+01) Para salvarmos os dados inserindos no form de cadastro de produtos, utilizaremos Promises. 
+
+02) Criando a rota com o verbo http POST para pegarmos os dados do form e persistirmos no banco de dados:
+
+    const express = require('express');
+    const routes = express.Router();
+
+    const ProductController = require('./app/controllers/ProductController');
+
+    routes.get('/', (req, res) => {
+      return res.render('layout.njk');
+    });
+
+    routes.get('/products/create', ProductController.create);
+    routes.post('/produts', ProductController.post); <==
+
+    routes.get('/ads/create', (req, res) => {
+      return res.redirect('/products/create');
+    });
+
+    module.exports = routes;
+
+03) Criando o model de Categorias :
+
+    Onde?
+    src/models/Category.js
+
+04) Importanto o arquivo de conexão com o banco de dados dentro do model Category.js :
+
+    const db = require('../config/db'); <==
+
+05) Exportando a query contendo os registros da tabela de categorias :
+
+    Exportaremos um objeto com uma função chamada all(),
+    essa função irá conter a query que irá retornar todos os registros da tabela:
+
+    const db = require('../config/db');
+
+    module.exports = {
+      all() {
+        return db.query(`
+          SELECT * FROM categories
+        `);
+      }
+    }
+
+06) Importando o model de Categoria dentro do ProductController :
+
+    Porque?
+    Porque na hora de cadastrarmos os produtos precisaremos
+    retornar no input quais são as categorias disponíveis para escolhermos. 
+
+    const Category = require('../models/Category'); <==
+
+    module.exports = {
+      create(req, res) {
+        return res.render("products/create.njk");
+      },
+      post(req, res) {
+
+      }
+    }
+
+07) Acessando o model Category para termos accesso a função all() que irá retornar os registros da tabela:
+
+    OBS: A seguir utilizaremos o then(), 
+    já que o método all() executa uma query de consulta no banco de dados e a função query 
+    permite que utilizamos o padrão de Promise.
+    
+    Dentro de um then nós teremos o resultado,
+    caso essa operação de consulta no banco de dados retorne um erro, 
+    utilizaremos o catch() para tratar esse erro. 
+
+    const Category = require('../models/Category');
+
+    module.exports = {
+      create(req, res) {
+        return res.render("products/create.njk");
+      },
+      post(req, res) {
+        Category.all() <==
+          .then((results) => { <==
+            const categories = results.rows; // vai retornar os registros da tabela de categorias como um array <==
+
+            return res.render('products/create.njk', { 
+              
+            });
+          })
+          .catch((err) => { <==
+            throw new Error(err)} <==
+          ); <==
+      }
+    }
+
+08) Injetando os registros da tabela de Categorias dentro da view :
+
+    const Category = require('../models/Category');
+
+    module.exports = {
+      create(req, res) {
+        return res.render("products/create.njk");
+      },
+      post(req, res) {
+        Category.all()
+          .then((results) => {
+            const categories = results.rows; // vai retornar os registros da tabela de categorias como um array
+
+            return res.render('products/create.njk', { categories }); <== <== <== <== <==
+          })
+          .catch((err) => {
+            throw new Error(err)}
+          );
+      }
+    }
