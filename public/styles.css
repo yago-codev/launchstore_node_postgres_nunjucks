@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900&display=swap');
+
+:root {
+  --primary-color: #DDE8FD;
+  --font-primary: #6C7A92;
+  --font-secondary: #9DABC1;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+  list-style-type: none;
+  box-sizing: border-box;
+  border: none;
+  outline: 0;
+}
+
+html, body {
+  min-height: 100vh;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: var(--primary-color);
+}
+
+.container {
+  width: 90%;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+header, footer {
+  width: 100%;
+  background-color: var(--primary-color);
+  padding: 32px 0;
+  text-align: center;
+}
+
+header {
+  box-shadow:  20px 20px 60px #bdc5d6, 
+              -20px -20px 60px #ffffff;
+}
+
+header div.container {
+  display: grid;
+  grid-template-columns: 220px auto 340px;
+  align-items: center;
+  grid-gap: 24px;
+}
+
+header div.container a {
+  justify-self: start;
+}
+
+.logo h1 {
+  background: -webkit-linear-gradient(#5880FF, #809CFF);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  /* color: var(--font-primary); */
+  font-size: 36px;
+  line-height: 46px;
+  letter-spacing: 2px;
+}
+
+/* Header Search */
+.search input {
+  width: 100%;
+  padding: 12px 24px;
+  border-radius: 20px;
+  font-size: 16px;
+  background: var(--primary-color);
+  box-shadow: inset 3px 3px 10px #bdc5d6, 
+  inset -3px -3px 10px #ffffff;
+  color: var(--font-primary);
+}
+
+.search input::placeholder {
+  color: var(--font-secondary);
+}
+
+nav.primary ul {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+nav.primary ul li {
+  width: 160px;
+}
+
+nav.primary ul li a,
+nav.primary ul li a span {
+  display: flex;
+  align-items: center;
+}
+
+nav.primary ul li a {
+  width: 100%;
+  height: 42px;
+  border-radius: 20px;
+  justify-content: center;
+  margin-right: 8px;
+  color: var(--font-secondary);
+  box-shadow:  5px 5px 10px #bdc5d6, 
+  -5px -5px 10px #ffffff;
+  transition: color 0.3s;
+}
+
+nav.primary ul li a:hover {
+  color: var(--font-primary);
+}
+
+nav.primary ul li a:active {
+  background: -webkit-linear-gradient(#5880FF, #809CFF);
+  box-shadow: inset 5px 5px 10px #4b6dd9, 
+  inset -5px -5px 10px #6593ff;
+  color: white;
+}
+
+nav.primary ul li a:active i {
+  transition: color 0.3s;
+}
+
+nav.primary ul li a:active i {
+  color: white;
+}
+
+nav.primary ul li a i {
+  margin-right: 5px;
+}
