@@ -1,0 +1,186 @@
+01) Criar uma rota para o cadastro de produtos:
+
+    const express = require('express');
+    const routes = express.Router();
+
+    routes.get('/', (req, res) => {
+      return res.render('layout.njk');
+    });
+
+    routes.get('/products/create', ); <==
+
+    module.exports = routes;
+
+02) Criando o controller da rota de criação de um novo produto:
+
+    Onde?
+    src/app/controllers/ProductController.js
+
+03) Exportando objeto no ProductController:
+
+    Esse objeto irá conter uma função chamada create(req, res), 
+    e essa função inicialmente fará apenas a renderização 
+    do html do form onde criaremos o novo produto. 
+
+    module.exports = {
+      create(req, res) {
+        return res.render("products/create.njk");
+      }
+    }
+
+04) Criando o html contendo o form para criação de um novo produto :
+
+    Onde?
+    src/app/views/products/create.njk
+
+05) Importando o ProductController dentro da rota de criação de novos produtos :
+
+    const express = require('express');
+    const routes = express.Router();
+
+    const ProductController = require('./app/controllers/ProductController'); <==
+
+    routes.get('/', (req, res) => {
+      return res.render('layout.njk'); 
+    });
+
+    routes.get('/products/create', ProductController.create);  <==
+
+    module.exports = routes;
+
+06) Criando uma rota para redirecionar o usuário para a rota de criação de produtos :
+
+    const express = require('express');
+    const routes = express.Router();
+
+    const ProductController = require('./app/controllers/ProductController');
+
+    routes.get('/', (req, res) => {
+      return res.render('layout.njk');
+    });
+
+    routes.get('/products/create', ProductController.create);
+
+    routes.get('/ads/create', (req, res) => { <==
+      return res.redirect('/products/create'); <==
+    }); <==
+
+    module.exports = routes;
+
+07) Estruturando o arquivo HTML/NJK de criação de produtos (create.njk) :
+
+    {% extends "layout.njk" %} <!-- chamando o arquivo base do layout -->
+
+    {% block content %} <!-- bloco de conteúdo que será inserido dentro do layout.njk -->
+      <section class="container form">
+        <form method="POST" action="/products">
+          <div class="header">
+            <h3>Cadastrar Produto</h3>
+          </div>
+
+          <div class="fields">
+            {% include 'products/fields.njk' %}
+          </div>
+        </form>
+      </section>
+    {% endblock content %}
+
+08) Criando os campos do formulário utilizados para criar um novo produto :
+
+    Onde?
+    src/app/views/products/fields.njk
+
+10) Estrutura do arquivo fields.njk :
+
+    <div class="item">
+      <div>Categoria</div>
+      <div>
+        <select name="category_id">
+          {% for category in categories %}
+            <option value="{{ category.id }}" {% if product.category.id === category.id %} selected {% endif %}>
+              {{ category.name }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <div class="item">
+      <div>Nome</div>
+      <div>
+        <input 
+          type="text"
+          name="name"
+          placeholder="Digite o título do anúncio"
+          value="{{ product.name }}"
+        >
+      </div>
+    </div>
+
+    <div class="item">
+      <div>Descrição</div>
+      <div>
+        <textarea name="description">
+          {{ product.description }}
+        </textarea>
+      </div>
+    </div>
+
+    {# Campo de foto #}
+
+    <div class="item">
+      <div>Valor</div>
+      <div>
+        <input 
+          type="text"
+          name="price"
+          placeholder="Digite o preço do produto"
+          value="{{ product.price }}"
+          {# faremos uma mascara de dinheiro #}
+        >
+      </div>
+      {% if product.old_price %}
+        <input type="hidden" name="old_price" value="{{ product.old_price }}">
+      {% endif %}
+    </div>
+
+    <div class="item">
+      <div>Quantidade</div>
+      <div>
+        <input 
+          type="number"
+          name="quantity"
+          placeholder="Digite quantos produtos estão disponíveis no estoque"
+          value="{{ product.quantity }}"
+        >
+      </div>
+    </div>
+
+    {% if product.status %}
+      <div class="item">
+        <div>Disponível ?</div>
+        <div>
+          <span>
+            <input 
+              type="radio" 
+              name="status"
+              value="1"
+              {% if product.status === '1' %}
+                checked
+              {% endif %}
+            > Sim
+          </span>
+
+          <span>
+            <input 
+              type="radio" 
+              name="status"
+              value="0"
+              {% if product.status === '0' %}
+                checked
+              {% endif %}
+            > Não
+          </span>
+        </div>
+      </div>
+    {% endif %}
